@@ -1,0 +1,26 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: eventdesk-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: eventdesk
+      POSTGRES_PASSWORD: eventdesk
+      POSTGRES_DB: eventdesk
+    ports:
+      - "5434:5432"
+    volumes:
+      - eventdesk-postgres-data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    container_name: eventdesk-redis
+    restart: unless-stopped
+    ports:
+      - "6380:6379"
+    volumes:
+      - eventdesk-redis-data:/data
+
+volumes:
+  eventdesk-postgres-data:
+  eventdesk-redis-data:

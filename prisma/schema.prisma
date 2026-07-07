@@ -1,0 +1,89 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider      = "prisma-client"
+  output        = "../generated/prisma"
+  moduleFormat  = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ORGANIZER
+  STAFF
+  ATTENDEE
+}
+
+enum EventStatus {
+  DRAFT
+  PUBLISHED
+  CLOSED
+  CANCELLED
+}
+
+enum RegistrationStatus {
+  CONFIRMED
+  CANCELLED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         Role
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  organizedEvents Event[]   @relation("OrganizerEvents")
+  checkInsPerformed CheckIn[] @relation("StaffCheckIns")
+}
+
+model Event {
+  id          String      @id @default(cuid())
+  organizerId String
+  organizer   User        @relation("OrganizerEvents", fields: [organizerId], references: [id])
+  name        String
+  description String?
+  startDate   DateTime
+  endDate     DateTime
+  capacity    Int
+  status      EventStatus @default(DRAFT)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  registrations Registration[]
+
+  @@index([organizerId])
+}
+
+model Registration {
+  id            String             @id @default(cuid())
+  eventId       String
+  event         Event              @relation(fields: [eventId], references: [id])
+  attendeeName  String
+  attendeeEmail String
+  checkInCode   String             @unique
+  status        RegistrationStatus @default(CONFIRMED)
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+
+  checkIn CheckIn?
+
+  @@index([eventId])
+}
+
+model CheckIn {
+  id               String       @id @default(cuid())
+  registrationId   String       @unique
+  registration     Registration @relation(fields: [registrationId], references: [id])
+  checkedInById    String
+  checkedInBy      User         @relation("StaffCheckIns", fields: [checkedInById], references: [id])
+  checkedInAt      DateTime     @default(now())
+  fromOfflineSync  Boolean      @default(false)
+
+  @@index([checkedInById])
+}
