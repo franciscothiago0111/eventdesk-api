@@ -107,7 +107,8 @@ describe('Event (e2e)', () => {
       .get('/events')
       .set('Authorization', `Bearer ${accessToken}`)
       .expect(200);
-    const list = (listResponse.body as Envelope<EventPayload[]>).payload;
+    const list = (listResponse.body as Envelope<{ data: EventPayload[] }>)
+      .payload.data;
     expect(list.some((e) => e.id === eventId)).toBe(true);
   });
 

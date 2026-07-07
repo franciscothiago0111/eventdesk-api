@@ -95,10 +95,12 @@ describe('PrismaEventRepository (integration)', () => {
     });
     await repository.save(other);
 
-    const found = await repository.findByOrganizer(organizerId);
+    const found = await repository.findByOrganizer(organizerId, {
+      limit: 100,
+    });
 
-    expect(found.some((event) => event.id === mine.id)).toBe(true);
-    expect(found.some((event) => event.id === other.id)).toBe(false);
+    expect(found.data.some((event) => event.id === mine.id)).toBe(true);
+    expect(found.data.some((event) => event.id === other.id)).toBe(false);
 
     await prisma.event.deleteMany({
       where: { organizerId: otherOrganizer.id },

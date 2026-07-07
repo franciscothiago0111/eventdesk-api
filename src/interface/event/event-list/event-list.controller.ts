@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ListEventsUseCase } from '../../../application/event/list-events.usecase';
 import { ApiResponseService } from '../../../shared/services/api-response.service';
@@ -6,6 +6,7 @@ import { CurrentUser } from '../../../shared/decorators/current-user.decorator';
 import type { CurrentUserPayload } from '../../../shared/decorators/current-user.decorator';
 import { Permissions } from '../../../shared/decorators/permissions.decorator';
 import { presentEvent } from '../event.presenter';
+import { ListEventsDto } from './dto/list-events.dto';
 
 @ApiTags('events')
 @ApiBearerAuth()
@@ -18,13 +19,27 @@ export class EventListController {
 
   @Permissions('ORGANIZER')
   @Get()
-  async list(@CurrentUser() user: CurrentUserPayload) {
-    const events = await this.listEventsUseCase.execute({
+  async list(
+    @Query() query: ListEventsDto,
+    @CurrentUser() user: CurrentUserPayload,
+  ) {
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 10;
+
+    const { data, total } = await this.listEventsUseCase.execute({
       organizerId: user.organizerId,
+      name: query.name,
+      status: query.status,
+      page,
+      limit,
     });
-    return this.apiResponse.success(
+
+    return this.apiResponse.paginated(
       'Events retrieved',
-      events.map(presentEvent),
+      data.map(presentEvent),
+      total,
+      page,
+      limit,
     );
   }
 }

@@ -1,6 +1,11 @@
 import { Injectable } from '@nestjs/common';
+import { Prisma } from '../../../generated/prisma/client';
 import { PrismaService } from './prisma.service';
-import { EventRepository } from '../../domain/event/event.repository';
+import {
+  EventListFilters,
+  EventListResult,
+  EventRepository,
+} from '../../domain/event/event.repository';
 import { EventAggregate } from '../../domain/event/event.aggregate';
 import { DateRange } from '../../domain/event/date-range.vo';
 import { Capacity } from '../../domain/event/capacity.vo';
@@ -47,19 +52,39 @@ export class PrismaEventRepository implements EventRepository {
     return this.toDomain(event, event._count.registrations);
   }
 
-  async findByOrganizer(organizerId: string): Promise<EventAggregate[]> {
-    const events = await this.prisma.event.findMany({
-      where: { organizerId },
-      include: {
-        _count: {
-          select: { registrations: { where: { status: 'CONFIRMED' } } },
+  async findByOrganizer(
+    organizerId: string,
+    filters: EventListFilters = {},
+  ): Promise<EventListResult> {
+    const { name, status, page = 1, limit = 10 } = filters;
+
+    const where: Prisma.EventWhereInput = {
+      organizerId,
+      ...(name ? { name: { contains: name, mode: 'insensitive' } } : {}),
+      ...(status ? { status } : {}),
+    };
+
+    const [events, total] = await Promise.all([
+      this.prisma.event.findMany({
+        where,
+        include: {
+          _count: {
+            select: { registrations: { where: { status: 'CONFIRMED' } } },
+          },
         },
-      },
-      orderBy: { createdAt: 'desc' },
-    });
-    return events.map((event) =>
-      this.toDomain(event, event._count.registrations),
-    );
+        orderBy: { createdAt: 'desc' },
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+      this.prisma.event.count({ where }),
+    ]);
+
+    return {
+      data: events.map((event) =>
+        this.toDomain(event, event._count.registrations),
+      ),
+      total,
+    };
   }
 
   private toDomain(
