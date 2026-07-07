@@ -14,6 +14,10 @@ export interface EventProps {
   organizerId: string;
   name: string;
   description: string | null;
+  location: string | null;
+  profileImageUrl: string | null;
+  coverImageUrl: string | null;
+  passHash: string | null;
   dateRange: DateRange;
   capacity: Capacity;
   status: EventStatus;
@@ -38,6 +42,18 @@ export class EventAggregate {
   get description() {
     return this.props.description;
   }
+  get location() {
+    return this.props.location;
+  }
+  get profileImageUrl() {
+    return this.props.profileImageUrl;
+  }
+  get coverImageUrl() {
+    return this.props.coverImageUrl;
+  }
+  get passHash() {
+    return this.props.passHash;
+  }
   get dateRange() {
     return this.props.dateRange;
   }
@@ -51,6 +67,9 @@ export class EventAggregate {
   updateDetails(props: {
     name: string;
     description: string | null;
+    location: string | null;
+    profileImageUrl: string | null;
+    coverImageUrl: string | null;
     dateRange: DateRange;
     capacity: Capacity;
   }): void {
@@ -61,8 +80,19 @@ export class EventAggregate {
     }
     this.props.name = props.name;
     this.props.description = props.description;
+    this.props.location = props.location;
+    this.props.profileImageUrl = props.profileImageUrl;
+    this.props.coverImageUrl = props.coverImageUrl;
     this.props.dateRange = props.dateRange;
     this.props.capacity = props.capacity;
+  }
+
+  setPassHash(passHash: string | null): void {
+    this.props.passHash = passHash;
+  }
+
+  hasPass(): boolean {
+    return this.props.passHash !== null;
   }
 
   publish(): void {

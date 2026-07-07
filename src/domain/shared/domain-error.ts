@@ -13,3 +13,4 @@ export class EventFullError extends DomainError {}
 export class EventNotAcceptingRegistrationsError extends DomainError {}
 export class RegistrationNotConfirmableError extends DomainError {}
 export class DuplicateCheckInError extends DomainError {}
+export class InvalidEventPassError extends DomainError {}

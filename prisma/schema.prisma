@@ -2,9 +2,9 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider      = "prisma-client"
-  output        = "../generated/prisma"
-  moduleFormat  = "cjs"
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
+  moduleFormat = "cjs"
 }
 
 datasource db {
@@ -38,22 +38,26 @@ model User {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  organizedEvents Event[]   @relation("OrganizerEvents")
+  organizedEvents   Event[]   @relation("OrganizerEvents")
   checkInsPerformed CheckIn[] @relation("StaffCheckIns")
 }
 
 model Event {
-  id          String      @id @default(cuid())
-  organizerId String
-  organizer   User        @relation("OrganizerEvents", fields: [organizerId], references: [id])
-  name        String
-  description String?
-  startDate   DateTime
-  endDate     DateTime
-  capacity    Int
-  status      EventStatus @default(DRAFT)
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  id              String      @id @default(cuid())
+  organizerId     String
+  organizer       User        @relation("OrganizerEvents", fields: [organizerId], references: [id])
+  name            String
+  description     String?
+  location        String?
+  profileImageUrl String?
+  coverImageUrl   String?
+  passHash        String?
+  startDate       DateTime
+  endDate         DateTime
+  capacity        Int
+  status          EventStatus @default(DRAFT)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
 
   registrations Registration[]
 
@@ -77,13 +81,13 @@ model Registration {
 }
 
 model CheckIn {
-  id               String       @id @default(cuid())
-  registrationId   String       @unique
-  registration     Registration @relation(fields: [registrationId], references: [id])
-  checkedInById    String
-  checkedInBy      User         @relation("StaffCheckIns", fields: [checkedInById], references: [id])
-  checkedInAt      DateTime     @default(now())
-  fromOfflineSync  Boolean      @default(false)
+  id              String       @id @default(cuid())
+  registrationId  String       @unique
+  registration    Registration @relation(fields: [registrationId], references: [id])
+  checkedInById   String
+  checkedInBy     User         @relation("StaffCheckIns", fields: [checkedInById], references: [id])
+  checkedInAt     DateTime     @default(now())
+  fromOfflineSync Boolean      @default(false)
 
   @@index([checkedInById])
 }

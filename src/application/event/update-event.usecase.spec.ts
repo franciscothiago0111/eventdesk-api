@@ -1,4 +1,5 @@
 import { NotFoundException } from '@nestjs/common';
+import * as bcrypt from 'bcryptjs';
 import { UpdateEventUseCase } from './update-event.usecase';
 import { InMemoryEventRepository } from '../testing/in-memory-event.repository';
 import { EventAggregate } from '../../domain/event/event.aggregate';
@@ -12,6 +13,10 @@ function buildEvent(status: EventAggregate['status'] = 'DRAFT') {
     organizerId: 'organizer-1',
     name: 'Annual Conference',
     description: null,
+    location: null,
+    profileImageUrl: null,
+    coverImageUrl: null,
+    passHash: null,
     dateRange: DateRange.create(
       new Date('2026-09-01T09:00:00.000Z'),
       new Date('2026-09-02T18:00:00.000Z'),
@@ -92,5 +97,60 @@ describe('UpdateEventUseCase', () => {
         capacity: 50,
       }),
     ).rejects.toThrow(EventNotEditableError);
+  });
+
+  it('leaves passHash unchanged when pass is omitted', async () => {
+    const event = buildEvent();
+    event.setPassHash('existing-hash');
+    await eventRepository.save(event);
+
+    const updated = await useCase.execute({
+      id: event.id,
+      organizerId: event.organizerId,
+      name: 'Updated Conference',
+      startDate: new Date('2026-10-01T09:00:00.000Z'),
+      endDate: new Date('2026-10-02T18:00:00.000Z'),
+      capacity: 50,
+    });
+
+    expect(updated.passHash).toBe('existing-hash');
+  });
+
+  it('hashes a new pass when provided', async () => {
+    const event = buildEvent();
+    await eventRepository.save(event);
+
+    const updated = await useCase.execute({
+      id: event.id,
+      organizerId: event.organizerId,
+      name: 'Updated Conference',
+      pass: 'new-pass',
+      startDate: new Date('2026-10-01T09:00:00.000Z'),
+      endDate: new Date('2026-10-02T18:00:00.000Z'),
+      capacity: 50,
+    });
+
+    expect(updated.hasPass()).toBe(true);
+    await expect(bcrypt.compare('new-pass', updated.passHash!)).resolves.toBe(
+      true,
+    );
+  });
+
+  it('clears the pass when an empty string is provided', async () => {
+    const event = buildEvent();
+    event.setPassHash('existing-hash');
+    await eventRepository.save(event);
+
+    const updated = await useCase.execute({
+      id: event.id,
+      organizerId: event.organizerId,
+      name: 'Updated Conference',
+      pass: '',
+      startDate: new Date('2026-10-01T09:00:00.000Z'),
+      endDate: new Date('2026-10-02T18:00:00.000Z'),
+      capacity: 50,
+    });
+
+    expect(updated.hasPass()).toBe(false);
   });
 });

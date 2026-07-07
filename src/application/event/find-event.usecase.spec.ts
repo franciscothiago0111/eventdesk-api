@@ -11,6 +11,10 @@ function buildEvent(organizerId: string) {
     organizerId,
     name: 'Annual Conference',
     description: null,
+    location: null,
+    profileImageUrl: null,
+    coverImageUrl: null,
+    passHash: null,
     dateRange: DateRange.create(
       new Date('2026-09-01T09:00:00.000Z'),
       new Date('2026-09-02T18:00:00.000Z'),

@@ -14,6 +14,10 @@ function buildEvent(overrides: Partial<EventProps> = {}): EventAggregate {
     organizerId: 'organizer-1',
     name: 'Conference',
     description: null,
+    location: null,
+    profileImageUrl: null,
+    coverImageUrl: null,
+    passHash: null,
     dateRange: DateRange.create(new Date('2026-01-01'), new Date('2026-01-02')),
     capacity: Capacity.create(2),
     status: 'DRAFT',
@@ -79,6 +83,9 @@ describe('EventAggregate', () => {
     event.updateDetails({
       name: 'Renamed',
       description: 'Now with a description',
+      location: null,
+      profileImageUrl: null,
+      coverImageUrl: null,
       dateRange: DateRange.create(
         new Date('2026-02-01'),
         new Date('2026-02-02'),
@@ -95,6 +102,9 @@ describe('EventAggregate', () => {
       event.updateDetails({
         name: 'Renamed',
         description: null,
+        location: null,
+        profileImageUrl: null,
+        coverImageUrl: null,
         dateRange: event.dateRange,
         capacity: event.capacity,
       }),

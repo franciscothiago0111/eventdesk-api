@@ -2,12 +2,14 @@ import { Module } from '@nestjs/common';
 import { EventCreateController } from './event-create/event-create.controller';
 import { EventListController } from './event-list/event-list.controller';
 import { EventFindController } from './event-find/event-find.controller';
+import { EventFindPublicController } from './event-find-public/event-find-public.controller';
 import { EventPublishController } from './event-publish/event-publish.controller';
 import { EventCloseController } from './event-close/event-close.controller';
 import { EventUpdateController } from './event-update/event-update.controller';
 import { CreateEventUseCase } from '../../application/event/create-event.usecase';
 import { ListEventsUseCase } from '../../application/event/list-events.usecase';
 import { FindEventUseCase } from '../../application/event/find-event.usecase';
+import { FindPublicEventUseCase } from '../../application/event/find-public-event.usecase';
 import { PublishEventUseCase } from '../../application/event/publish-event.usecase';
 import { CloseEventUseCase } from '../../application/event/close-event.usecase';
 import { UpdateEventUseCase } from '../../application/event/update-event.usecase';
@@ -22,6 +24,7 @@ import { ApiResponseService } from '../../shared/services/api-response.service';
     EventCreateController,
     EventListController,
     EventFindController,
+    EventFindPublicController,
     EventPublishController,
     EventCloseController,
     EventUpdateController,
@@ -30,6 +33,7 @@ import { ApiResponseService } from '../../shared/services/api-response.service';
     CreateEventUseCase,
     ListEventsUseCase,
     FindEventUseCase,
+    FindPublicEventUseCase,
     PublishEventUseCase,
     CloseEventUseCase,
     UpdateEventUseCase,

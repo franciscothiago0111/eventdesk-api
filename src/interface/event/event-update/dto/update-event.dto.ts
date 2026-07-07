@@ -17,6 +17,30 @@ export class UpdateEventDto {
   @IsString()
   description?: string;
 
+  @ApiPropertyOptional({ example: 'Moscone Center, San Francisco' })
+  @IsOptional()
+  @IsString()
+  location?: string;
+
+  @ApiPropertyOptional({ example: 'https://cdn.example.com/profile.png' })
+  @IsOptional()
+  @IsString()
+  profileImageUrl?: string;
+
+  @ApiPropertyOptional({ example: 'https://cdn.example.com/cover.png' })
+  @IsOptional()
+  @IsString()
+  coverImageUrl?: string;
+
+  @ApiPropertyOptional({
+    example: 'let-me-in',
+    description:
+      'Access code attendees must provide on the public registration page. Send an empty string to clear it, omit to leave unchanged.',
+  })
+  @IsOptional()
+  @IsString()
+  pass?: string;
+
   @ApiProperty({ example: '2026-09-01T09:00:00.000Z' })
   @IsDateString()
   startDate: string;

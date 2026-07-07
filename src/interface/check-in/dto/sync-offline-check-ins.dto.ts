@@ -8,7 +8,9 @@ import {
 } from 'class-validator';
 
 export class OfflineCheckInItemDto {
-  @ApiProperty({ description: 'Unique check-in code assigned to the registration' })
+  @ApiProperty({
+    description: 'Unique check-in code assigned to the registration',
+  })
   @IsString()
   checkInCode: string;
 }

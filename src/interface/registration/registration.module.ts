@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { QueueModule } from '../../infrastructure/queue/queue.module';
 import { RegistrationController } from './registration.controller';
+import { RegistrationPublicController } from './registration-public.controller';
 import { ConfirmRegistrationUseCase } from '../../application/registration/confirm-registration.usecase';
 import { CancelRegistrationUseCase } from '../../application/registration/cancel-registration.usecase';
 import { ListRegistrationsByEventUseCase } from '../../application/registration/list-registrations-by-event.usecase';
@@ -14,7 +15,7 @@ import { ApiResponseService } from '../../shared/services/api-response.service';
 
 @Module({
   imports: [QueueModule],
-  controllers: [RegistrationController],
+  controllers: [RegistrationController, RegistrationPublicController],
   providers: [
     ConfirmRegistrationUseCase,
     CancelRegistrationUseCase,

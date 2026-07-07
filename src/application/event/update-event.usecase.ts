@@ -1,4 +1,5 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import * as bcrypt from 'bcryptjs';
 import { EVENT_REPOSITORY } from '../../domain/event/event.repository';
 import type { EventRepository } from '../../domain/event/event.repository';
 import { EventAggregate } from '../../domain/event/event.aggregate';
@@ -10,6 +11,10 @@ export interface UpdateEventParams {
   organizerId: string;
   name: string;
   description?: string | null;
+  location?: string | null;
+  profileImageUrl?: string | null;
+  coverImageUrl?: string | null;
+  pass?: string | null;
   startDate: Date;
   endDate: Date;
   capacity: number;
@@ -30,9 +35,18 @@ export class UpdateEventUseCase {
     event.updateDetails({
       name: params.name,
       description: params.description ?? null,
+      location: params.location ?? null,
+      profileImageUrl: params.profileImageUrl ?? null,
+      coverImageUrl: params.coverImageUrl ?? null,
       dateRange: DateRange.create(params.startDate, params.endDate),
       capacity: Capacity.create(params.capacity, event.capacity.current),
     });
+
+    if (params.pass !== undefined) {
+      event.setPassHash(
+        params.pass ? await bcrypt.hash(params.pass, 10) : null,
+      );
+    }
 
     await this.eventRepository.save(event);
     return event;
