@@ -1,6 +1,8 @@
 import { NotFoundException } from '@nestjs/common';
 import { FindPublicEventUseCase } from './find-public-event.usecase';
 import { InMemoryEventRepository } from '../testing/in-memory-event.repository';
+import { InMemoryEventImageRepository } from '../testing/in-memory-event-image.repository';
+import { InMemoryScheduleItemRepository } from '../testing/in-memory-schedule-item.repository';
 import {
   EventAggregate,
   EventStatus,
@@ -15,8 +17,7 @@ function buildEvent(status: EventStatus) {
     name: 'Annual Conference',
     description: null,
     location: null,
-    profileImageUrl: null,
-    coverImageUrl: null,
+    category: 'OTHER',
     passHash: null,
     dateRange: DateRange.create(
       new Date('2026-09-01T09:00:00.000Z'),
@@ -33,7 +34,11 @@ describe('FindPublicEventUseCase', () => {
 
   beforeEach(() => {
     eventRepository = new InMemoryEventRepository();
-    useCase = new FindPublicEventUseCase(eventRepository);
+    useCase = new FindPublicEventUseCase(
+      eventRepository,
+      new InMemoryEventImageRepository(),
+      new InMemoryScheduleItemRepository(),
+    );
   });
 
   it('returns a published event', async () => {
@@ -42,7 +47,7 @@ describe('FindPublicEventUseCase', () => {
 
     const found = await useCase.execute({ id: event.id });
 
-    expect(found).toBe(event);
+    expect(found.event).toBe(event);
   });
 
   it.each(['DRAFT', 'CLOSED', 'CANCELLED'] as EventStatus[])(

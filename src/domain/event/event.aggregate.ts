@@ -9,14 +9,22 @@ import {
 
 export type EventStatus = 'DRAFT' | 'PUBLISHED' | 'CLOSED' | 'CANCELLED';
 
+export type EventCategory =
+  | 'CONFERENCE'
+  | 'WORKSHOP'
+  | 'MEETUP'
+  | 'HACKATHON'
+  | 'WEBINAR'
+  | 'TRAINING'
+  | 'OTHER';
+
 export interface EventProps {
   id: string;
   organizerId: string;
   name: string;
   description: string | null;
   location: string | null;
-  profileImageUrl: string | null;
-  coverImageUrl: string | null;
+  category: EventCategory;
   passHash: string | null;
   dateRange: DateRange;
   capacity: Capacity;
@@ -45,11 +53,8 @@ export class EventAggregate {
   get location() {
     return this.props.location;
   }
-  get profileImageUrl() {
-    return this.props.profileImageUrl;
-  }
-  get coverImageUrl() {
-    return this.props.coverImageUrl;
+  get category() {
+    return this.props.category;
   }
   get passHash() {
     return this.props.passHash;
@@ -68,8 +73,7 @@ export class EventAggregate {
     name: string;
     description: string | null;
     location: string | null;
-    profileImageUrl: string | null;
-    coverImageUrl: string | null;
+    category: EventCategory;
     dateRange: DateRange;
     capacity: Capacity;
   }): void {
@@ -81,8 +85,7 @@ export class EventAggregate {
     this.props.name = props.name;
     this.props.description = props.description;
     this.props.location = props.location;
-    this.props.profileImageUrl = props.profileImageUrl;
-    this.props.coverImageUrl = props.coverImageUrl;
+    this.props.category = props.category;
     this.props.dateRange = props.dateRange;
     this.props.capacity = props.capacity;
   }

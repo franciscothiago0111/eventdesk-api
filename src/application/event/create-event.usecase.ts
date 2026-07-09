@@ -6,14 +6,14 @@ import type { EventRepository } from '../../domain/event/event.repository';
 import { EventAggregate } from '../../domain/event/event.aggregate';
 import { DateRange } from '../../domain/event/date-range.vo';
 import { Capacity } from '../../domain/event/capacity.vo';
+import { EventCategory } from '../../domain/event/event.aggregate';
 
 export interface CreateEventParams {
   organizerId: string;
   name: string;
   description?: string | null;
   location?: string | null;
-  profileImageUrl?: string | null;
-  coverImageUrl?: string | null;
+  category?: EventCategory;
   pass?: string | null;
   startDate: Date;
   endDate: Date;
@@ -35,8 +35,7 @@ export class CreateEventUseCase {
       name: params.name,
       description: params.description ?? null,
       location: params.location ?? null,
-      profileImageUrl: params.profileImageUrl ?? null,
-      coverImageUrl: params.coverImageUrl ?? null,
+      category: params.category ?? 'OTHER',
       passHash,
       dateRange: DateRange.create(params.startDate, params.endDate),
       capacity: Capacity.create(params.capacity),

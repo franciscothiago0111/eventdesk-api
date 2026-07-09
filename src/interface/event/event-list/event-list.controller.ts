@@ -36,7 +36,7 @@ export class EventListController {
 
     return this.apiResponse.paginated(
       'Events retrieved',
-      data.map(presentEvent),
+      data.map((event) => presentEvent(event)),
       total,
       page,
       limit,

@@ -15,8 +15,7 @@ function buildEvent(overrides: Partial<EventProps> = {}): EventAggregate {
     name: 'Conference',
     description: null,
     location: null,
-    profileImageUrl: null,
-    coverImageUrl: null,
+    category: 'OTHER',
     passHash: null,
     dateRange: DateRange.create(new Date('2026-01-01'), new Date('2026-01-02')),
     capacity: Capacity.create(2),
@@ -84,8 +83,7 @@ describe('EventAggregate', () => {
       name: 'Renamed',
       description: 'Now with a description',
       location: null,
-      profileImageUrl: null,
-      coverImageUrl: null,
+      category: 'CONFERENCE',
       dateRange: DateRange.create(
         new Date('2026-02-01'),
         new Date('2026-02-02'),
@@ -94,6 +92,7 @@ describe('EventAggregate', () => {
     });
     expect(event.name).toBe('Renamed');
     expect(event.capacity.max).toBe(5);
+    expect(event.category).toBe('CONFERENCE');
   });
 
   it('rejects updateDetails() once the event is no longer DRAFT', () => {
@@ -103,8 +102,7 @@ describe('EventAggregate', () => {
         name: 'Renamed',
         description: null,
         location: null,
-        profileImageUrl: null,
-        coverImageUrl: null,
+        category: 'OTHER',
         dateRange: event.dateRange,
         capacity: event.capacity,
       }),

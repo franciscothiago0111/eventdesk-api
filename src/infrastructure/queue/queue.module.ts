@@ -14,7 +14,10 @@ export { QUEUE_NAMES };
         },
       }),
     }),
-    BullModule.registerQueue({ name: QUEUE_NAMES.EMAIL }),
+    BullModule.registerQueue(
+      { name: QUEUE_NAMES.EMAIL },
+      { name: QUEUE_NAMES.NOTIFICATION },
+    ),
   ],
   exports: [BullModule],
 })

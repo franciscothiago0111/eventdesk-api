@@ -16,10 +16,11 @@ export class EventFindPublicController {
   @Public()
   @Get(':id')
   async find(@Param('id') id: string) {
-    const event = await this.findPublicEventUseCase.execute({ id });
+    const { event, images, schedule } =
+      await this.findPublicEventUseCase.execute({ id });
     return this.apiResponse.success(
       'Event retrieved',
-      presentPublicEvent(event),
+      presentPublicEvent(event, images, schedule),
     );
   }
 }

@@ -16,6 +16,10 @@ import { UpdateEventUseCase } from '../../application/event/update-event.usecase
 import { EventListener } from '../../application/event/event.listener';
 import { EVENT_REPOSITORY } from '../../domain/event/event.repository';
 import { PrismaEventRepository } from '../../infrastructure/database/event.repository';
+import { EVENT_IMAGE_REPOSITORY } from '../../domain/event-image/event-image.repository';
+import { PrismaEventImageRepository } from '../../infrastructure/database/event-image.repository';
+import { SCHEDULE_ITEM_REPOSITORY } from '../../domain/schedule/schedule-item.repository';
+import { PrismaScheduleItemRepository } from '../../infrastructure/database/schedule-item.repository';
 import { EventDispatcherService } from '../../infrastructure/events/event-dispatcher.service';
 import { ApiResponseService } from '../../shared/services/api-response.service';
 
@@ -41,6 +45,8 @@ import { ApiResponseService } from '../../shared/services/api-response.service';
     EventDispatcherService,
     ApiResponseService,
     { provide: EVENT_REPOSITORY, useClass: PrismaEventRepository },
+    { provide: EVENT_IMAGE_REPOSITORY, useClass: PrismaEventImageRepository },
+    { provide: SCHEDULE_ITEM_REPOSITORY, useClass: PrismaScheduleItemRepository },
   ],
 })
 export class EventModule {}

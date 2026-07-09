@@ -19,10 +19,13 @@ export class EventFindController {
   @Permissions('ORGANIZER')
   @Get(':id')
   async find(@Param('id') id: string, @CurrentUser() user: CurrentUserPayload) {
-    const event = await this.findEventUseCase.execute({
+    const { event, images, schedule } = await this.findEventUseCase.execute({
       id,
       organizerId: user.organizerId,
     });
-    return this.apiResponse.success('Event retrieved', presentEvent(event));
+    return this.apiResponse.success(
+      'Event retrieved',
+      presentEvent(event, images, schedule),
+    );
   }
 }

@@ -11,10 +11,11 @@ import { PrismaRegistrationRepository } from '../../infrastructure/database/regi
 import { EVENT_REPOSITORY } from '../../domain/event/event.repository';
 import { PrismaEventRepository } from '../../infrastructure/database/event.repository';
 import { EventDispatcherService } from '../../infrastructure/events/event-dispatcher.service';
+import { WebsocketModule } from '../../infrastructure/websocket/websocket.module';
 import { ApiResponseService } from '../../shared/services/api-response.service';
 
 @Module({
-  imports: [QueueModule],
+  imports: [QueueModule, WebsocketModule],
   controllers: [RegistrationController, RegistrationPublicController],
   providers: [
     ConfirmRegistrationUseCase,

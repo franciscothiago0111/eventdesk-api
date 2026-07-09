@@ -1,6 +1,8 @@
 import { NotFoundException } from '@nestjs/common';
 import { FindEventUseCase } from './find-event.usecase';
 import { InMemoryEventRepository } from '../testing/in-memory-event.repository';
+import { InMemoryEventImageRepository } from '../testing/in-memory-event-image.repository';
+import { InMemoryScheduleItemRepository } from '../testing/in-memory-schedule-item.repository';
 import { EventAggregate } from '../../domain/event/event.aggregate';
 import { DateRange } from '../../domain/event/date-range.vo';
 import { Capacity } from '../../domain/event/capacity.vo';
@@ -12,8 +14,7 @@ function buildEvent(organizerId: string) {
     name: 'Annual Conference',
     description: null,
     location: null,
-    profileImageUrl: null,
-    coverImageUrl: null,
+    category: 'OTHER',
     passHash: null,
     dateRange: DateRange.create(
       new Date('2026-09-01T09:00:00.000Z'),
@@ -30,7 +31,11 @@ describe('FindEventUseCase', () => {
 
   beforeEach(() => {
     eventRepository = new InMemoryEventRepository();
-    useCase = new FindEventUseCase(eventRepository);
+    useCase = new FindEventUseCase(
+      eventRepository,
+      new InMemoryEventImageRepository(),
+      new InMemoryScheduleItemRepository(),
+    );
   });
 
   it('returns the event when it belongs to the organizer', async () => {
@@ -42,7 +47,9 @@ describe('FindEventUseCase', () => {
       organizerId: 'organizer-1',
     });
 
-    expect(found).toBe(event);
+    expect(found.event).toBe(event);
+    expect(found.images).toEqual([]);
+    expect(found.schedule).toEqual([]);
   });
 
   it('rejects finding an event belonging to a different organizer', async () => {

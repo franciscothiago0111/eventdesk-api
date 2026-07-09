@@ -29,6 +29,22 @@ enum RegistrationStatus {
   CANCELLED
 }
 
+enum EventCategory {
+  CONFERENCE
+  WORKSHOP
+  MEETUP
+  HACKATHON
+  WEBINAR
+  TRAINING
+  OTHER
+}
+
+enum EventImageType {
+  PROFILE
+  COVER
+  GALLERY
+}
+
 model User {
   id           String   @id @default(cuid())
   email        String   @unique
@@ -38,30 +54,60 @@ model User {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  organizedEvents   Event[]   @relation("OrganizerEvents")
-  checkInsPerformed CheckIn[] @relation("StaffCheckIns")
+  organizedEvents   Event[]        @relation("OrganizerEvents")
+  checkInsPerformed CheckIn[]      @relation("StaffCheckIns")
+  notifications     Notification[]
 }
 
 model Event {
-  id              String      @id @default(cuid())
-  organizerId     String
-  organizer       User        @relation("OrganizerEvents", fields: [organizerId], references: [id])
-  name            String
-  description     String?
-  location        String?
-  profileImageUrl String?
-  coverImageUrl   String?
-  passHash        String?
-  startDate       DateTime
-  endDate         DateTime
-  capacity        Int
-  status          EventStatus @default(DRAFT)
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
+  id          String        @id @default(cuid())
+  organizerId String
+  organizer   User          @relation("OrganizerEvents", fields: [organizerId], references: [id])
+  name        String
+  description String?
+  location    String?
+  category    EventCategory @default(OTHER)
+  passHash    String?
+  startDate   DateTime
+  endDate     DateTime
+  capacity    Int
+  status      EventStatus   @default(DRAFT)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
 
   registrations Registration[]
+  schedule      ScheduleItem[]
+  images        EventImage[]
 
   @@index([organizerId])
+}
+
+model ScheduleItem {
+  id          String   @id @default(cuid())
+  eventId     String
+  event       Event    @relation(fields: [eventId], references: [id])
+  title       String
+  description String?
+  startTime   DateTime
+  endTime     DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([eventId])
+}
+
+model EventImage {
+  id        String         @id @default(cuid())
+  eventId   String
+  event     Event          @relation(fields: [eventId], references: [id])
+  url       String
+  key       String
+  type      EventImageType
+  caption   String?
+  createdAt DateTime       @default(now())
+
+  @@index([eventId])
+  @@index([eventId, type])
 }
 
 model Registration {
@@ -90,4 +136,19 @@ model CheckIn {
   fromOfflineSync Boolean      @default(false)
 
   @@index([checkedInById])
+}
+
+model Notification {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type       String
+  title      String
+  message    String
+  entityType String?
+  entityId   String?
+  read       Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  @@index([userId])
 }

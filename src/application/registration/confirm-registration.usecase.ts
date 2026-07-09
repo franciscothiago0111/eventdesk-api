@@ -69,6 +69,9 @@ export class ConfirmRegistrationUseCase {
       new RegistrationConfirmed(
         registration.id,
         registration.eventId,
+        event.organizerId,
+        event.name,
+        registration.attendeeName,
         registration.attendeeEmail,
         registration.checkInCode.value,
       ),

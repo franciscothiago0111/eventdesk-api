@@ -1,11 +1,13 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsDateString,
+  IsEnum,
   IsInt,
   IsOptional,
   IsString,
   Min,
 } from 'class-validator';
+import { EventCategory } from '../../../../../generated/prisma/client';
 
 export class UpdateEventDto {
   @ApiProperty({ example: 'Tech Conference 2026' })
@@ -22,15 +24,9 @@ export class UpdateEventDto {
   @IsString()
   location?: string;
 
-  @ApiPropertyOptional({ example: 'https://cdn.example.com/profile.png' })
-  @IsOptional()
-  @IsString()
-  profileImageUrl?: string;
-
-  @ApiPropertyOptional({ example: 'https://cdn.example.com/cover.png' })
-  @IsOptional()
-  @IsString()
-  coverImageUrl?: string;
+  @ApiProperty({ enum: EventCategory, example: EventCategory.WORKSHOP })
+  @IsEnum(EventCategory)
+  category: EventCategory;
 
   @ApiPropertyOptional({
     example: 'let-me-in',

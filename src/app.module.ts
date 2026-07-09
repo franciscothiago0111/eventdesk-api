@@ -6,6 +6,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './infrastructure/database/database.module';
 import { QueueModule } from './infrastructure/queue/queue.module';
+import { StorageModule } from './infrastructure/storage/storage.module';
 import { WebsocketModule } from './infrastructure/websocket/websocket.module';
 import { JwtAuthGuard } from './infrastructure/guards/jwt-auth.guard';
 import { PermissionsGuard } from './infrastructure/guards/permissions.guard';
@@ -14,6 +15,9 @@ import { AuthModule } from './interface/auth/auth.module';
 import { EventModule } from './interface/event/event.module';
 import { RegistrationModule } from './interface/registration/registration.module';
 import { CheckInModule } from './interface/check-in/check-in.module';
+import { NotificationModule } from './interface/notification/notification.module';
+import { EventImageModule } from './interface/event-image/event-image.module';
+import { ScheduleModule } from './interface/schedule/schedule.module';
 
 @Module({
   imports: [
@@ -21,11 +25,15 @@ import { CheckInModule } from './interface/check-in/check-in.module';
     EventEmitterModule.forRoot(),
     DatabaseModule,
     QueueModule,
+    StorageModule,
     WebsocketModule,
     AuthModule,
     EventModule,
     RegistrationModule,
     CheckInModule,
+    NotificationModule,
+    EventImageModule,
+    ScheduleModule,
   ],
   controllers: [AppController],
   providers: [
