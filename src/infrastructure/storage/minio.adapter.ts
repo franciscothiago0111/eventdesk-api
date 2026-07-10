@@ -11,28 +11,31 @@ import {
 } from '../../domain/shared/storage.port';
 
 @Injectable()
-export class CloudflareR2Adapter implements StoragePort {
-  private readonly logger = new Logger(CloudflareR2Adapter.name);
+export class MinioAdapter implements StoragePort {
+  private readonly logger = new Logger(MinioAdapter.name);
   private readonly client: S3Client;
   private readonly bucketName: string;
   private readonly publicUrl: string;
 
   constructor() {
-    const accountId = process.env.R2_ACCOUNT_ID;
-    const accessKeyId = process.env.R2_ACCESS_KEY_ID;
-    const secretAccessKey = process.env.R2_SECRET_ACCESS_KEY;
-    this.bucketName = process.env.R2_BUCKET_NAME ?? '';
-    this.publicUrl = process.env.R2_PUBLIC_URL ?? '';
+    const endpoint = process.env.MINIO_ENDPOINT ?? 'localhost';
+    const port = process.env.MINIO_PORT ?? '9000';
+    const useSSL = process.env.MINIO_USE_SSL === 'true';
+    const accessKeyId = process.env.MINIO_ACCESS_KEY;
+    const secretAccessKey = process.env.MINIO_SECRET_KEY;
+    this.bucketName = process.env.MINIO_BUCKET_NAME ?? '';
+    this.publicUrl = process.env.MINIO_PUBLIC_URL ?? '';
 
-    if (!accountId || !accessKeyId || !secretAccessKey || !this.bucketName) {
+    if (!accessKeyId || !secretAccessKey || !this.bucketName) {
       this.logger.warn(
-        'Cloudflare R2 não configurado. Defina R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY e R2_BUCKET_NAME.',
+        'MinIO não configurado. Defina MINIO_ACCESS_KEY, MINIO_SECRET_KEY e MINIO_BUCKET_NAME.',
       );
     }
 
     this.client = new S3Client({
-      region: 'auto',
-      endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
+      region: 'us-east-1',
+      endpoint: `${useSSL ? 'https' : 'http'}://${endpoint}:${port}`,
+      forcePathStyle: true,
       credentials: { accessKeyId: accessKeyId ?? '', secretAccessKey: secretAccessKey ?? '' },
     });
   }
