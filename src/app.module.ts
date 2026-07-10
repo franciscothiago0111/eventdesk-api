@@ -19,6 +19,7 @@ import { CheckInModule } from './interface/check-in/check-in.module';
 import { NotificationModule } from './interface/notification/notification.module';
 import { EventImageModule } from './interface/event-image/event-image.module';
 import { ScheduleModule } from './interface/schedule/schedule.module';
+import { DashboardModule } from './interface/dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { ScheduleModule } from './interface/schedule/schedule.module';
     NotificationModule,
     EventImageModule,
     ScheduleModule,
+    DashboardModule,
   ],
   controllers: [AppController],
   providers: [
