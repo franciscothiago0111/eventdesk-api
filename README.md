@@ -1,6 +1,6 @@
 # eventdesk-api
 
-Backend for eventdesk — event management with offline-capable, real-time attendee check-in. Built with NestJS, Prisma (Postgres), Redis/BullMQ, Socket.io, MinIO (S3-compatible object storage), and Resend (email).
+Backend for eventdesk - event management with offline-capable, real-time attendee check-in. Built with NestJS, Prisma (Postgres), Redis/BullMQ, Socket.io, MinIO (S3-compatible object storage), and Resend (email).
 
 Pairs with [eventdesk-web](https://github.com/franciscothiago0111/eventdesk-web) (Next.js).
 
@@ -10,7 +10,7 @@ Layered/DDD-ish structure, one folder per concern under `src/`:
 
 ```
 src/
-├── domain/            # Aggregates, value objects, domain events, repository/port interfaces — no framework/Prisma imports
+├── domain/            # Aggregates, value objects, domain events, repository/port interfaces - no framework/Prisma imports
 │   ├── event/           EventAggregate, DateRange, Capacity
 │   ├── registration/     RegistrationAggregate, CheckInCode
 │   ├── check-in/         CheckInAggregate
@@ -28,10 +28,10 @@ src/
 │   ├── strategies/        Passport JWT strategy
 │   ├── events/            EventDispatcherService + listeners (audit log, email enqueue, websocket push)
 │   ├── queue/             BullMQ module (email queue)
-│   ├── storage/           StorageModule — MinioAdapter implementing StoragePort (event image uploads)
-│   ├── email/             EmailModule — ResendAdapter implementing EmailPort + EmailTemplateService
+│   ├── storage/           StorageModule - MinioAdapter implementing StoragePort (event image uploads)
+│   ├── email/             EmailModule - ResendAdapter implementing EmailPort + EmailTemplateService
 │   ├── websocket/         Socket.io gateway, room-per-event
-│   └── filters/           DomainErrorFilter — maps domain-layer errors to 400 responses
+│   └── filters/           DomainErrorFilter - maps domain-layer errors to 400 responses
 ├── interface/           # HTTP surface: controllers + DTOs, one module per resource
 │   ├── auth/ event/ registration/ check-in/ event-image/ notification/ schedule/ dashboard/
 └── shared/              # Cross-cutting: ApiResponseService envelope, decorators, enums
@@ -41,19 +41,19 @@ Request flow: `interface` (controller, validates DTO) → `application` (use-cas
 
 ## Architecture Decision Records
 
-### ADR 1 — the domain layer never imports Prisma
+### ADR 1 - the domain layer never imports Prisma
 
 `src/domain/**` has zero imports of `@prisma/client` or any NestJS module. Aggregates (`EventAggregate`, `RegistrationAggregate`, `CheckInAggregate`) and value objects (`DateRange`, `Capacity`, `CheckInCode`) are plain TypeScript classes that enforce business invariants (capacity limits, date ranges, no double-publish, no duplicate check-in) and expose only repository *interfaces* (`EventRepository`, etc.), not implementations.
 
-**Why:** domain unit tests run with no database and no Nest test module — just `new EventAggregate(...)` and assertions — which is why they're fast enough to run on every save and don't need Docker up. It also means swapping Prisma for another persistence layer only touches `infrastructure/database/*.repository.ts`, not business logic. The cost is an extra mapping step (Prisma row ↔ aggregate) in each infrastructure repository, which is intentional friction: it keeps ORM-shaped concerns (nullable columns, relations) out of the rules that decide whether an event can be published.
+**Why:** domain unit tests run with no database and no Nest test module - just `new EventAggregate(...)` and assertions - which is why they're fast enough to run on every save and don't need Docker up. It also means swapping Prisma for another persistence layer only touches `infrastructure/database/*.repository.ts`, not business logic. The cost is an extra mapping step (Prisma row ↔ aggregate) in each infrastructure repository, which is intentional friction: it keeps ORM-shaped concerns (nullable columns, relations) out of the rules that decide whether an event can be published.
 
-### ADR 2 — capacity is derived, not stored
+### ADR 2 - capacity is derived, not stored
 
 `Event.capacity.current` is not a column. The Prisma `EventRepository` computes it as a filtered `_count` of `CONFIRMED` registrations at read time (`infrastructure/database/event.repository.ts`).
 
-**Why:** a stored counter can drift from reality if a write to `Registration` ever fails to also update the counter (no DB transaction wraps `confirm()`/`cancel()` and the capacity check in this MVP — see the Phase 4 note in `docs/build-plan.md`). Deriving it removes the drift risk entirely at the cost of one extra aggregate query per event read, which is acceptable at MVP scale.
+**Why:** a stored counter can drift from reality if a write to `Registration` ever fails to also update the counter (no DB transaction wraps `confirm()`/`cancel()` and the capacity check in this MVP - see the Phase 4 note in `docs/build-plan.md`). Deriving it removes the drift risk entirely at the cost of one extra aggregate query per event read, which is acceptable at MVP scale.
 
-### ADR 3 — MVP auth is access-token-only
+### ADR 3 - MVP auth is access-token-only
 
 There is no refresh token. `JWT_EXPIRES_IN` (`.env`) controls the single access token's lifetime.
 
@@ -67,7 +67,7 @@ With the app running, interactive OpenAPI docs are served at:
 http://localhost:3001/docs
 ```
 
-Generated from `main.ts`'s `DocumentBuilder` — all controllers are annotated with `@nestjs/swagger` decorators, and the bearer-token auth scheme is pre-wired (use the "Authorize" button with a token from `POST /auth/login`).
+Generated from `main.ts`'s `DocumentBuilder` - all controllers are annotated with `@nestjs/swagger` decorators, and the bearer-token auth scheme is pre-wired (use the "Authorize" button with a token from `POST /auth/login`).
 
 ## Getting started
 
@@ -81,7 +81,7 @@ Generated from `main.ts`'s `DocumentBuilder` — all controllers are annotated w
 cp .env.example .env
 ```
 
-`.env.example` documents `DATABASE_URL`, `REDIS_HOST`/`REDIS_PORT`, `JWT_SECRET`, `JWT_EXPIRES_IN`, `PORT`, the `MINIO_*` object storage settings, and `RESEND_API_KEY`/`EMAIL_FROM`. Defaults point at the ports below — no edits needed for local dev (the `RESEND_API_KEY` is blank by default; leave it blank in dev and the email adapter no-ops).
+`.env.example` documents `DATABASE_URL`, `REDIS_HOST`/`REDIS_PORT`, `JWT_SECRET`, `JWT_EXPIRES_IN`, `PORT`, the `MINIO_*` object storage settings, and `RESEND_API_KEY`/`EMAIL_FROM`. Defaults point at the ports below - no edits needed for local dev (the `RESEND_API_KEY` is blank by default; leave it blank in dev and the email adapter no-ops).
 
 ### 2. Infra
 
@@ -90,9 +90,9 @@ docker compose up -d
 ```
 
 Brings up:
-- **Postgres 16** on `localhost:5434` (container `eventdesk-postgres`) — deliberately not 5432, to avoid clashing with other projects already running on this machine.
+- **Postgres 16** on `localhost:5434` (container `eventdesk-postgres`) - deliberately not 5432, to avoid clashing with other projects already running on this machine.
 - **Redis 7** on `localhost:6380` (container `eventdesk-redis`), backing the BullMQ email queue.
-- **MinIO** on `localhost:9002` (API) / `localhost:9003` (console), container `eventdesk-minio` — S3-compatible object storage backing event image uploads (`StoragePort` / `MinioAdapter`).
+- **MinIO** on `localhost:9002` (API) / `localhost:9003` (console), container `eventdesk-minio` - S3-compatible object storage backing event image uploads (`StoragePort` / `MinioAdapter`).
 
 ### 3. Install, migrate, run
 
@@ -116,10 +116,10 @@ $ yarn build && yarn start:prod
 
 ## Testing
 
-- `yarn test` — unit tests (`*.spec.ts`), covering the domain layer (aggregates and value objects in `src/domain`) and the application layer (use-cases in `src/application`, exercised against in-memory fake repositories rather than mocks).
-- `yarn test:e2e` — end-to-end tests (`test/*.e2e-spec.ts`) that boot the full Nest app and hit its HTTP API against the real database.
-- `yarn test:integration` — integration tests (`src/infrastructure/database/*.integration-spec.ts`) that exercise the Prisma repositories directly against Postgres. Requires `docker compose up -d` first.
-- `yarn test:cov` — unit test coverage report. Current baseline: **23.06%** statements (21.25% branches, 29.36% functions, 23.39% lines) — coverage dropped as `event-image`, `notification`, `schedule`, and `dashboard` modules were added without unit tests yet.
+- `yarn test` - unit tests (`*.spec.ts`), covering the domain layer (aggregates and value objects in `src/domain`) and the application layer (use-cases in `src/application`, exercised against in-memory fake repositories rather than mocks).
+- `yarn test:e2e` - end-to-end tests (`test/*.e2e-spec.ts`) that boot the full Nest app and hit its HTTP API against the real database.
+- `yarn test:integration` - integration tests (`src/infrastructure/database/*.integration-spec.ts`) that exercise the Prisma repositories directly against Postgres. Requires `docker compose up -d` first.
+- `yarn test:cov` - unit test coverage report. Current baseline: **23.06%** statements (21.25% branches, 29.36% functions, 23.39% lines) - coverage dropped as `event-image`, `notification`, `schedule`, and `dashboard` modules were added without unit tests yet.
 
 Run everything CI runs, locally:
 
