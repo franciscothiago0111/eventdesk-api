@@ -21,6 +21,7 @@ export class RegistrationListener {
     await this.emailQueue.add('confirmation-email', {
       registrationId: payload.registrationId,
       eventId: payload.eventId,
+      attendeeName: payload.attendeeName,
       attendeeEmail: payload.attendeeEmail,
       checkInCode: payload.checkInCode,
     });

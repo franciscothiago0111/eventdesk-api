@@ -3,7 +3,7 @@ import { PrismaService } from './prisma.service';
 import { ScheduleItemRepository } from '../../domain/schedule/schedule-item.repository';
 import { ScheduleItemAggregate } from '../../domain/schedule/schedule-item.aggregate';
 import { DateRange } from '../../domain/event/date-range.vo';
-import { ScheduleItem as PrismaScheduleItem } from '../../../generated/prisma/client';
+import { ScheduleItem as PrismaScheduleItem } from '../../generated/prisma/client';
 
 @Injectable()
 export class PrismaScheduleItemRepository implements ScheduleItemRepository {

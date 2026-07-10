@@ -6,6 +6,7 @@ import { ConfirmRegistrationUseCase } from '../../application/registration/confi
 import { CancelRegistrationUseCase } from '../../application/registration/cancel-registration.usecase';
 import { ListRegistrationsByEventUseCase } from '../../application/registration/list-registrations-by-event.usecase';
 import { RegistrationListener } from '../../application/registration/registration.listener';
+import { RegistrationEmailProcessor } from '../../application/registration/registration.processor';
 import { REGISTRATION_REPOSITORY } from '../../domain/registration/registration.repository';
 import { PrismaRegistrationRepository } from '../../infrastructure/database/registration.repository';
 import { EVENT_REPOSITORY } from '../../domain/event/event.repository';
@@ -22,6 +23,7 @@ import { ApiResponseService } from '../../shared/services/api-response.service';
     CancelRegistrationUseCase,
     ListRegistrationsByEventUseCase,
     RegistrationListener,
+    RegistrationEmailProcessor,
     EventDispatcherService,
     ApiResponseService,
     {

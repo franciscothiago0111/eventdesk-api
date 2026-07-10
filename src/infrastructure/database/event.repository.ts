@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '../../../generated/prisma/client';
+import { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from './prisma.service';
 import {
   EventListFilters,
@@ -9,7 +9,7 @@ import {
 import { EventAggregate } from '../../domain/event/event.aggregate';
 import { DateRange } from '../../domain/event/date-range.vo';
 import { Capacity } from '../../domain/event/capacity.vo';
-import { Event as PrismaEvent } from '../../../generated/prisma/client';
+import { Event as PrismaEvent } from '../../generated/prisma/client';
 
 @Injectable()
 export class PrismaEventRepository implements EventRepository {

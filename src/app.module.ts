@@ -7,6 +7,7 @@ import { AppService } from './app.service';
 import { DatabaseModule } from './infrastructure/database/database.module';
 import { QueueModule } from './infrastructure/queue/queue.module';
 import { StorageModule } from './infrastructure/storage/storage.module';
+import { EmailModule } from './infrastructure/email/email.module';
 import { WebsocketModule } from './infrastructure/websocket/websocket.module';
 import { JwtAuthGuard } from './infrastructure/guards/jwt-auth.guard';
 import { PermissionsGuard } from './infrastructure/guards/permissions.guard';
@@ -26,6 +27,7 @@ import { ScheduleModule } from './interface/schedule/schedule.module';
     DatabaseModule,
     QueueModule,
     StorageModule,
+    EmailModule,
     WebsocketModule,
     AuthModule,
     EventModule,

@@ -2,7 +2,7 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
 import { PERMISSIONS_KEY } from '../../shared/decorators/permissions.decorator';
-import { Role } from '../../../generated/prisma/client';
+import { Role } from '../../generated/prisma/client';
 import { CurrentUserPayload } from '../../shared/decorators/current-user.decorator';
 
 interface RequestWithUser extends Request {

@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+  <body style="margin:0;padding:0;background-color:#f4f4f5;font-family:Arial,Helvetica,sans-serif;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f5;padding:24px 0;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="480" cellpadding="0" cellspacing="0" style="background-color:#ffffff;border-radius:8px;overflow:hidden;">
+            <tr>
+              <td style="background-color:#4f46e5;padding:24px;text-align:center;">
+                <span style="color:#ffffff;font-size:20px;font-weight:bold;">EventDesk</span>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:32px;color:#18181b;">
+                <h1 style="font-size:20px;margin:0 0 16px;">Inscrição confirmada!</h1>
+                <p style="font-size:14px;line-height:1.6;margin:0 0 16px;">
+                  Olá {{attendeeName}}, sua inscrição no evento <strong>{{eventName}}</strong> foi confirmada.
+                </p>
+                {{#if eventLocation}}
+                <p style="font-size:14px;line-height:1.6;margin:0 0 8px;"><strong>Local:</strong> {{eventLocation}}</p>
+                {{/if}}
+                <p style="font-size:14px;line-height:1.6;margin:0 0 24px;"><strong>Data:</strong> {{eventStartDate}}</p>
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f5;border-radius:8px;margin-bottom:8px;">
+                  <tr>
+                    <td style="padding:16px;text-align:center;">
+                      <span style="font-size:12px;color:#71717a;display:block;margin-bottom:4px;">Código de check-in</span>
+                      <span style="font-size:24px;font-weight:bold;letter-spacing:2px;color:#4f46e5;">{{checkInCode}}</span>
+                    </td>
+                  </tr>
+                </table>
+                <p style="font-size:12px;line-height:1.6;color:#71717a;margin:16px 0 0;">
+                  Apresente este código na entrada do evento.
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

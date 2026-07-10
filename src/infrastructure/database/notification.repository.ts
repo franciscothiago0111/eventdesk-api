@@ -5,7 +5,7 @@ import {
   NotificationAggregate,
   NotificationType,
 } from '../../domain/notification/notification.aggregate';
-import { Notification as PrismaNotification } from '../../../generated/prisma/client';
+import { Notification as PrismaNotification } from '../../generated/prisma/client';
 
 @Injectable()
 export class PrismaNotificationRepository implements NotificationRepository {

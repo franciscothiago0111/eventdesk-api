@@ -7,7 +7,7 @@ import {
   IsString,
   Min,
 } from 'class-validator';
-import { EventCategory } from '../../../../../generated/prisma/client';
+import { EventCategory } from '../../../../generated/prisma/client';
 
 export class UpdateEventDto {
   @ApiProperty({ example: 'Tech Conference 2026' })

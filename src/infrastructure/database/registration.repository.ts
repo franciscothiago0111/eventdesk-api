@@ -3,7 +3,7 @@ import { PrismaService } from './prisma.service';
 import { RegistrationRepository } from '../../domain/registration/registration.repository';
 import { RegistrationAggregate } from '../../domain/registration/registration.aggregate';
 import { CheckInCode } from '../../domain/registration/check-in-code.vo';
-import { Registration as PrismaRegistration } from '../../../generated/prisma/client';
+import { Registration as PrismaRegistration } from '../../generated/prisma/client';
 
 @Injectable()
 export class PrismaRegistrationRepository implements RegistrationRepository {

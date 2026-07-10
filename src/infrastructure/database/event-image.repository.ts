@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { EventImageRepository } from '../../domain/event-image/event-image.repository';
 import { EventImageAggregate } from '../../domain/event-image/event-image.aggregate';
-import { EventImage as PrismaEventImage } from '../../../generated/prisma/client';
+import { EventImage as PrismaEventImage } from '../../generated/prisma/client';
 
 @Injectable()
 export class PrismaEventImageRepository implements EventImageRepository {
