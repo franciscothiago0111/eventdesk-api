@@ -131,5 +131,5 @@ NestJS · Prisma 7 (Postgres) · Redis + BullMQ · Socket.io · Passport JWT · 
 
 ## License
 
-UNLICENSED (private project).
+MIT
 # eventdesk-api
