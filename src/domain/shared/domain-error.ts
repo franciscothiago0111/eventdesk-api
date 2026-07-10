@@ -14,3 +14,4 @@ export class EventNotAcceptingRegistrationsError extends DomainError {}
 export class RegistrationNotConfirmableError extends DomainError {}
 export class DuplicateCheckInError extends DomainError {}
 export class InvalidEventPassError extends DomainError {}
+export class ScheduleItemOutOfRangeError extends DomainError {}

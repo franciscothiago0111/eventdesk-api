@@ -5,6 +5,7 @@ import { SCHEDULE_ITEM_REPOSITORY } from '../../domain/schedule/schedule-item.re
 import type { ScheduleItemRepository } from '../../domain/schedule/schedule-item.repository';
 import { ScheduleItemAggregate } from '../../domain/schedule/schedule-item.aggregate';
 import { DateRange } from '../../domain/event/date-range.vo';
+import { ScheduleItemOutOfRangeError } from '../../domain/shared/domain-error';
 
 export interface UpdateScheduleItemParams {
   id: string;
@@ -35,6 +36,15 @@ export class UpdateScheduleItemUseCase {
     const item = await this.scheduleItemRepository.findById(params.id);
     if (!item || item.eventId !== params.eventId) {
       throw new NotFoundException('Schedule item not found');
+    }
+
+    if (
+      params.startTime < event.dateRange.startDate ||
+      params.endTime > event.dateRange.endDate
+    ) {
+      throw new ScheduleItemOutOfRangeError(
+        'Schedule item must be within the event dates',
+      );
     }
 
     item.update({

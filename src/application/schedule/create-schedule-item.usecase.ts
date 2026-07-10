@@ -6,6 +6,7 @@ import { SCHEDULE_ITEM_REPOSITORY } from '../../domain/schedule/schedule-item.re
 import type { ScheduleItemRepository } from '../../domain/schedule/schedule-item.repository';
 import { ScheduleItemAggregate } from '../../domain/schedule/schedule-item.aggregate';
 import { DateRange } from '../../domain/event/date-range.vo';
+import { ScheduleItemOutOfRangeError } from '../../domain/shared/domain-error';
 
 export interface CreateScheduleItemParams {
   eventId: string;
@@ -30,6 +31,15 @@ export class CreateScheduleItemUseCase {
     const event = await this.eventRepository.findById(params.eventId);
     if (!event || event.organizerId !== params.organizerId) {
       throw new NotFoundException('Event not found');
+    }
+
+    if (
+      params.startTime < event.dateRange.startDate ||
+      params.endTime > event.dateRange.endDate
+    ) {
+      throw new ScheduleItemOutOfRangeError(
+        'Schedule item must be within the event dates',
+      );
     }
 
     const item = ScheduleItemAggregate.create({
