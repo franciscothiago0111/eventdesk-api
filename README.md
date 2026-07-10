@@ -2,7 +2,7 @@
 
 Backend for eventdesk — event management with offline-capable, real-time attendee check-in. Built with NestJS, Prisma (Postgres), Redis/BullMQ, and Socket.io.
 
-Pairs with [eventdesk-web](../eventdesk-web) (Next.js). See [docs/architecture-plan.md](../docs/architecture-plan.md) and [docs/build-plan.md](../docs/build-plan.md) for the full design and execution log.
+Pairs with [eventdesk-web](https://github.com/franciscothiago0111/eventdesk-web) (Next.js).
 
 ## Architecture
 
